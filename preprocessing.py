@@ -315,7 +315,7 @@ def preprocess_onwer_id(x):
 def initial_preprocessing(text):
   text = re.sub(r"(?:\@|https?\://)\S+", "", text)
   if text != "empety":
-    text = text.split(' ', 1)[1][:-33]
+    text = text.split(' ', 1)[0][:-33]
   return text
 
 ### Preprocessing a session
