@@ -348,5 +348,5 @@ def relabeling_dataset(df):
 
 ### Applying session preprocessing to a dataframe
 def preprocess_data(dataframe):
-  for column in dataframe.columns[:-2]:
+  for column in dataframe.columns[:-6]:
     dataframe[column] = dataframe[column].apply(preprocessing_session)
