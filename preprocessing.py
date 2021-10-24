@@ -315,7 +315,7 @@ def preprocess_onwer_id(x):
 def initial_preprocessing(text):
   text = re.sub(r"(?:\@|https?\://)\S+", "", text)
   if text != "empety":
-    text = text.split(' ', 1)[0][:-33]
+    text = text.split(' ', 1)[1][:-33]
   return text
 
 ### Preprocessing a session
@@ -348,5 +348,5 @@ def relabeling_dataset(df):
 
 ### Applying session preprocessing to a dataframe
 def preprocess_data(dataframe):
-  for column in dataframe.columns[:-5]:
+  for column in dataframe.columns[:-2]:
     dataframe[column] = dataframe[column].apply(preprocessing_session)
