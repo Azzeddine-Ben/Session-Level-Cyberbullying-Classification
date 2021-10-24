@@ -8,8 +8,8 @@ Created on Fri Oct 22 15:20:40 2021
 import numpy as np
 import pandas as pd
 import preprocessing
-from feature_extraction import extract_all_features
-from sklearn.model_slection import train_test_split
+from features_extraction import extract_all_features
+from sklearn.model_selection import train_test_split
 import os 
 import pickle
 
