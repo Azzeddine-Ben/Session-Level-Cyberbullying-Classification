@@ -16,9 +16,9 @@ import pickle
 if __name__ == '__main__':
     ### Reading the data
     path ='/content/drive/MyDrive/'
-    path_first_slice  = path + "/labeled_0plus_to_10__full.csv"
-    path_second_slice = path + "/labeled_10plus_to_40_full.csv"
-    path_third_slice  = path + "/labeled_40plus_full.csv"
+    path_first_slice  = path + "labeled_0plus_to_10__full.csv"
+    path_second_slice = path + "labeled_10plus_to_40_full.csv"
+    path_third_slice  = path + "labeled_40plus_full.csv"
     
     paths_list, dataframes_list, original_dataframes_list = [path_first_slice, path_second_slice, path_third_slice], [], []
        
@@ -82,7 +82,7 @@ if __name__ == '__main__':
     print("Spliiting Done. \n")
     
     print("Saving train & test data ... \n")
-    directory = path + '/instagram_data'
+    directory = path + 'instagram_data'
     if (os.path.exists(directory)) == False:  
         os.mkdir(directory)
         # train_dir, valid_dir, test_dir = directory + '/train', directory + '/valid', directory + '/test'

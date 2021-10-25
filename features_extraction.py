@@ -19,7 +19,7 @@ def generate_embeddings(dataframe):
     embed_type = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
     
     dataset_embeddings = []
-    for index, row in dataframe[dataframe.columns[:-2]].iterrows():
+    for index, row in dataframe[dataframe.columns[:-6]].iterrows():
         session_embed = []
         for text in row.to_list():
           if (text is not None) and (text != "empety"):
@@ -168,8 +168,7 @@ def extract_owner_cmnt_embedding(dataframe):
     return np.asarray(owner_cmnt_embeddings)
 
 def extract_all_features(dataframe):
-    return generate_embeddings(dataframe), extract_owner_cmnt_embedding(dataframe), 
-    extract_time_features(dataframe), extract_likes(dataframe), extract_sentiment_features(dataframe)    
+    return generate_embeddings(dataframe), extract_owner_cmnt_embedding(dataframe), extract_time_features(dataframe), extract_likes(dataframe), extract_sentiment_features(dataframe)    
 
     
     
