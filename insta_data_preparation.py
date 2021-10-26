@@ -82,7 +82,7 @@ if __name__ == '__main__':
     print("Spliiting Done. \n")
     
     print("Saving train & test data ... \n")
-    directory = path + 'instagram_data'
+    directory = 'instagram_data'
     if (os.path.exists(directory)) == False:  
         os.mkdir(directory)
         # train_dir, valid_dir, test_dir = directory + '/train', directory + '/valid', directory + '/test'
