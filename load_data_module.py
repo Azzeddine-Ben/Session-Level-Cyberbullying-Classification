@@ -7,7 +7,7 @@ Created on Sat Oct 23 17:25:17 2021
 import pickle
 
 
-path = "/content/rive/MyDrive/"
+path = "/content/drive/MyDrive"
 def load_labels(dataset_name):
     pickle_in = open(path + '/' + dataset_name + '_data/train/y_train', 'rb' )
     y_train   = pickle.load(pickle_in)
@@ -18,7 +18,7 @@ def load_labels(dataset_name):
     pickle_in.close()
     return y_train, y_test
 
-def load_train_features(dataset_name, eda):
+def load_train_features(dataset_name):
     
     pickle_in = open(path + '/' + dataset_name + '_data/train/X_train', 'rb')
     X_train = pickle.load(pickle_in)
@@ -43,25 +43,25 @@ def load_train_features(dataset_name, eda):
     return X_train, X_train_cmnt_emb, X_train_time, X_train_likes, X_train_sntms
 
 
-def load_test_features(dataset_name, eda):
+def load_test_features(dataset_name):
     
-    pickle_in = open(path + '/' + dataset_name + '_data/train/X_test', 'rb')
+    pickle_in = open(path + '/' + dataset_name + '_data/test/X_test', 'rb')
     X_test = pickle.load(pickle_in)
     pickle_in.close()
 
-    pickle_in = open(path + '/' + dataset_name + '_data/train/X_test_cmnt_emb', 'rb')
+    pickle_in = open(path + '/' + dataset_name + '_data/test/X_test_cmnt_emb', 'rb')
     X_test_cmnt_emb = pickle.load(pickle_in)
     pickle_in.close()
 
-    pickle_in = open(path + '/' + dataset_name + '_data/train/X_test_time', 'rb')
+    pickle_in = open(path + '/' + dataset_name + '_data/test/X_test_time', 'rb')
     X_test_time = pickle.load(pickle_in)
     pickle_in.close()
 
-    pickle_in = open(path + '/' + dataset_name + '_data/train/X_test_likes', 'rb')
+    pickle_in = open(path + '/' + dataset_name + '_data/test/X_test_likes', 'rb')
     X_test_likes = pickle.load(pickle_in)
     pickle_in.close()
     
-    pickle_in = open(path + '/' + dataset_name + '_data/train/X_test_sntms', 'rb')
+    pickle_in = open(path + '/' + dataset_name + '_data/test/X_test_sntms', 'rb')
     X_test_sntms = pickle.load(pickle_in)
     pickle_in.close()    
   
