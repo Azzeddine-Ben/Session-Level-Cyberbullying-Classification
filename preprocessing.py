@@ -4,6 +4,13 @@ Created on Fri Oct 22 21:14:27 2021
 
 @author: IT Doctor
 """
+
+# =============================================================================
+# newString = ' '.join([contraction_mapping[t] if t in contraction_mapping else t for t in newString.split(" ")])  
+# =============================================================================
+
+  
+
 import pandas as pd
 import unicodedata
 from bs4 import BeautifulSoup
@@ -203,6 +210,8 @@ emo_list = [ ':D',
  '0:3',
  ':*']
 
+
+
 def expand_contractions(text, contractions_dict):
     contractions_pattern = re.compile('({})'.format('|'.join(contractions_dict.keys())),
                                       flags=re.IGNORECASE | re.DOTALL)
@@ -241,7 +250,10 @@ def decoding_html(text):
 
 def denoise_text(text):
     text = decoding_html(text)
-    text = expand_contractions(text, contractions_dict)
+    text = ' '.join([contractions_dict[t] if t in contractions_dict else t for t in text.split(" ")])
+# =============================================================================
+#     text = expand_contractions(text, contractions_dict)
+# =============================================================================
     text = standardization(text)
     text = strip_html(text)
     text = remove_between_square_brackets(text)
