@@ -36,7 +36,7 @@ def extract_time_features(dataframe):
       publication_time_list = []
       for index, row in df.iterrows():
         time_list_per_session = []
-        for r in row[:-5]:
+        for r in row[:-6]:
           # print(re.search('((.*))', r).group(1))
           if r == "empety":
             time_list_per_session.append(0)
