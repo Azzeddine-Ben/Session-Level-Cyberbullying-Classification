@@ -81,14 +81,13 @@ def slcbc_framework():
     embeddings_input_layer = Input(shape=(maxlen, embed_dim), dtype='float32')
     
     gru_layer = GRU(5, activation='relu', return_sequences=True)
-    mha = MultiHeadAttention(num_heads=2, key_dim=2)
-    # =============================================================================
-    # mha = MultiHeadAttention_(100, 8, 512)
-    # =============================================================================
+    # mha = MultiHeadAttention(num_heads=2, key_dim=2)
+    mha = MultiHeadAttention_(100, 8, 512)
     pos_embed_layer = PositionEmbedding(maxlen, embed_dim)
     
     query_seq_encoding = gru_layer(embeddings_input_layer)
-    query_value_attention_seq = mha(embeddings_input_layer, embeddings_input_layer)
+    # query_value_attention_seq = mha(embeddings_input_layer, embeddings_input_layer)
+    query_value_attention_seq = mha(embeddings_input_layer)
     sentence_postion_encoding = pos_embed_layer(embeddings_input_layer)
     
     concatLayer = Concatenate()(

@@ -59,38 +59,38 @@ if __name__ == '__main__':
     
     model = slcbc_framework()
     model.summary()
-    chkp_path = path + dataset_name +'_data/' + dataset_name + '_model_classification.h5'
+    chkp_path = dataset_name + '_model_classification.h5'
     mchkp = tf.keras.callbacks.ModelCheckpoint(chkp_path, monitor='val_loss', verbose=1, save_best_only=True, save_weights_only = True)
     model.compile('adam', 'binary_crossentropy', metrics=['accuracy'])     
     keras.utils.plot_model(model)
      
     # callbacks = [tf.keras.callbacks.EarlyStopping('val_loss', patience=3, restore_best_weights=True)]
-    # callbacks = [tf.keras.callbacks.ReduceLROnPlateau('val_loss', patience=5, factor=0.125)]
-    callbacks = [tf.keras.callbacks.ModelCheckpoint(chkp_path, monitor='val_loss', verbose=1, save_best_only=True, save_weights_only = True),
-                 tf.keras.callbacks.EarlyStopping('val_loss', patience=5, restore_best_weights=True),
-                 tf.keras.callbacks.ReduceLROnPlateau('val_loss', patience=5, factor=0.125)
-                  ]
+    callbacks = [tf.keras.callbacks.ReduceLROnPlateau('val_loss', patience=5, factor=0.125)]
+    # callbacks = [tf.keras.callbacks.ModelCheckpoint(chkp_path, monitor='val_loss', verbose=1, save_best_only=True, save_weights_only = True),
+    #              tf.keras.callbacks.EarlyStopping('val_loss', patience=5, restore_best_weights=True),
+    #              tf.keras.callbacks.ReduceLROnPlateau('val_loss', patience=5, factor=0.125)
+    #               ]
     
     cw = class_weight.compute_class_weight('balanced',  [0, 1], y_train)
     cw_dict = {0: cw[0], 1: cw[1]}
     
     if cs_method == 'cw':
         history = model.fit(
-            [X_train, X_train_cmnt_emb, X_train_time, X_train_likes, X_train_sntms], 
+            [X_train, X_train_time, X_train_likes, X_train_cmnt_emb],# X_train_sntms],, 
             y_train, 
-            epochs=25, 
+            epochs=10, 
             batch_size=32, 
             validation_split=0.2,
             class_weight=cw_dict,
             callbacks=callbacks
             )        
-        results_dir = path + '/' + dataset_name + '/' + dataset_name + '_classification_results_cw'
+        results_dir = dataset_name + '_classification_results_cw'
     
     ### Saving results
     os.mkdir(results_dir)
     print_learning_curves(history, results_dir)
-    model.load_weights(chkp_path)
-    clf_report, confusion_matrix_fig = predict_and_visualize(model, [X_test, X_test_cmnt_emb, X_test_time, X_test_likes, X_test_sntms], y_test)
+    # model.load_weights(chkp_path)
+    clf_report, confusion_matrix_fig = predict_and_visualize(model, [X_test, X_test_time, X_test_likes, X_test_cmnt_emb], y_test)# X_test_sntms], y_test)
     
     ### Saving the classification report as a CSV file
     clf_report_df = pd.DataFrame(clf_report).transpose()
