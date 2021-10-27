@@ -58,9 +58,11 @@ class PositionEmbedding(keras.layers.Layer):
     def __init__(self, maxlen, embed_dim):
         super(PositionEmbedding, self).__init__()
         self.pos_emb = Embedding(input_dim=maxlen, output_dim=embed_dim)
-
-    def call(self, x):
-        maxlen = 100
+        self.maxlen = maxlen
+    def call(self, x, maxlen):
+# =============================================================================
+#         maxlen = maxlen
+# =============================================================================
         positions = tf.range(start=0, limit=maxlen, delta=1)
         positions = self.pos_emb(positions)
         # emb = embed_type(x)
@@ -70,9 +72,11 @@ class PositionEmbedding(keras.layers.Layer):
 embed_dim = 512 # X_train.shape[-1]  # Embedding size for each token
 num_heads = 2  # Number of attention heads
 ff_dim = 32  # Hidden layer size in feed forward network inside transformer
-maxlen = 100
+# =============================================================================
+# maxlen = 100
+# =============================================================================
 
-def slcbc_framework():
+def slcbc_framework(maxlen):
     ##### Embeddings inputs
     np.random.seed(123)
     python_random.seed(123)
@@ -82,7 +86,7 @@ def slcbc_framework():
     
     gru_layer = GRU(5, activation='relu', return_sequences=True)
     # mha = MultiHeadAttention(num_heads=2, key_dim=2)
-    mha = MultiHeadAttention_(100, 8, 512)
+    mha = MultiHeadAttention_(maxlen, 8, 512)
     pos_embed_layer = PositionEmbedding(maxlen, embed_dim)
     
     query_seq_encoding = gru_layer(embeddings_input_layer)

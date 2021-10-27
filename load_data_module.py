@@ -40,7 +40,7 @@ def load_train_features(dataset_name):
     X_train_sntms = pickle.load(pickle_in)
     pickle_in.close()    
   
-    return X_train, X_train_cmnt_emb, X_train_time, X_train_likes, X_train_sntms
+    return [X_train, X_train_cmnt_emb, X_train_time, X_train_likes, X_train_sntms]
 
 
 def load_test_features(dataset_name):
@@ -65,4 +65,4 @@ def load_test_features(dataset_name):
     X_test_sntms = pickle.load(pickle_in)
     pickle_in.close()    
   
-    return X_test, X_test_cmnt_emb, X_test_time, X_test_likes, X_test_sntms
+    return [X_test, X_test_cmnt_emb, X_test_time, X_test_likes, X_test_sntms]

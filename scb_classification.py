@@ -43,6 +43,13 @@ if __name__ == '__main__':
                            metavar='dataset_name',
                            type=str,
                            help='Name of the dataset to extract features')
+    
+    my_parser.add_argument('maxlen_cmnts',
+                           metavar='maxlen_cmnts',
+                           type=int,
+                           help='Maximum length of a session'
+                           )
+     
     my_parser.add_argument('cost_sensitive',
                            metavar='cost_sensitive',
                            type=str,
@@ -50,14 +57,26 @@ if __name__ == '__main__':
                            )
     args = my_parser.parse_args()
     dataset_name = args.dataset_name
+    maxlen = args.maxlen_cmnts
     cs_method = args.cost_sensitive
     
     #### Load data 
-    X_train, X_train_cmnt_emb, X_train_time, X_train_likes, X_train_sntms = load_train_features(dataset_name)
-    X_test, X_test_cmnt_emb, X_test_time, X_test_likes, X_test_sntms      = load_test_features(dataset_name)
+    train_features = load_train_features(dataset_name)
+    test_features  = load_test_features(dataset_name)
+    
+    #### Truncate sessions to the maxlen comments
+    truncated_train_features, truncated_test_features = [], []
+    for train_elem, test_elem in zip(train_features, test_features):
+        truncated_train_features.append(train_elem[:,maxlen+1,:])
+        truncated_test_features.append(test_elem[:,maxlen+1,:])
+    
+    #### Prepare train, test and label data
+    X_train, X_train_cmnt_emb, X_train_time, X_train_likes, X_train_sntms = truncated_train_features
+    X_test, X_test_cmnt_emb, X_test_time, X_test_likes, X_test_sntms      = truncated_test_features
     y_train, y_test = load_labels(dataset_name)
     
-    model = slcbc_framework()
+    #### Classification
+    model = slcbc_framework(maxlen)
     model.summary()
     chkp_path = dataset_name + '_model_classification.h5'
     mchkp = tf.keras.callbacks.ModelCheckpoint(chkp_path, monitor='val_loss', verbose=1, save_best_only=True, save_weights_only = True)
@@ -71,6 +90,7 @@ if __name__ == '__main__':
     #              tf.keras.callbacks.ReduceLROnPlateau('val_loss', patience=5, factor=0.125)
     #               ]
     
+    #### Compute the dataset class weight
     cw = class_weight.compute_class_weight('balanced',  [0, 1], y_train)
     cw_dict = {0: cw[0], 1: cw[1]}
     
@@ -84,7 +104,7 @@ if __name__ == '__main__':
             class_weight=cw_dict,
             callbacks=callbacks
             )        
-        results_dir = dataset_name + '_classification_results_cw'
+        results_dir = dataset_name + '_classification_results_cw_' + str(maxlen)
     
     ### Saving results
     os.mkdir(results_dir)
