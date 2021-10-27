@@ -63,22 +63,24 @@ if __name__ == '__main__':
     #### Load data 
     train_features = load_train_features(dataset_name)
     test_features  = load_test_features(dataset_name)
-    
+
     #### Truncate sessions to the maxlen comments
     truncated_train_features, truncated_test_features = [], []
     
     ### Truncate 3-dimensional data
     for train_elem, test_elem in zip(train_features[:2], test_features[:2]):
-        truncated_train_features.append(train_elem[:,maxlen+1,:])
-        truncated_test_features.append(test_elem[:,maxlen+1,:])
+        truncated_train_features.append(train_elem[:,:maxlen,:])
+        truncated_test_features.append(test_elem[:,:maxlen,:])
     ### Truncate 2-dimensional data
-    for train_elem, test_elem in zip(train_features[2], test_features[2]):
-        truncated_train_features.append(train_elem[:,maxlen+1])
-        truncated_test_features.append(test_elem[:,maxlen+1])   
+    truncated_train_features.append(train_features[2][:,:maxlen])
+    truncated_test_features.append(test_features[2][:,:maxlen])   
+
         
-    truncated_train_features.append(train_features[3], train_features[4])
-    truncated_test_features.append(test_features[3], test_features[4])
-    
+    truncated_train_features.append(train_features[3])
+    truncated_train_features.append(train_features[4])
+    truncated_test_features.append(test_features[3])
+    truncated_test_features.append(test_features[4])
+
     #### Prepare train, test and label data
     X_train, X_train_sntms, X_train_time, X_train_cmnt_emb, X_train_likes  = truncated_train_features
     X_test, X_test_sntms, X_test_time, X_test_cmnt_emb, X_test_likes       = truncated_test_features
@@ -93,7 +95,7 @@ if __name__ == '__main__':
     keras.utils.plot_model(model)
      
     # callbacks = [tf.keras.callbacks.EarlyStopping('val_loss', patience=3, restore_best_weights=True)]
-    callbacks = [tf.keras.callbacks.ReduceLROnPlateau('val_loss', patience=5, factor=0.125)]
+    callbacks = [tf.keras.callbacks.ReduceLROnPlateau('val_loss', patience=2, factor=0.125)]
     # callbacks = [tf.keras.callbacks.ModelCheckpoint(chkp_path, monitor='val_loss', verbose=1, save_best_only=True, save_weights_only = True),
     #              tf.keras.callbacks.EarlyStopping('val_loss', patience=5, restore_best_weights=True),
     #              tf.keras.callbacks.ReduceLROnPlateau('val_loss', patience=5, factor=0.125)
@@ -107,7 +109,7 @@ if __name__ == '__main__':
         history = model.fit(
             [X_train, X_train_time, X_train_likes, X_train_cmnt_emb],# X_train_sntms],, 
             y_train, 
-            epochs=10, 
+            epochs=5, 
             batch_size=32, 
             validation_split=0.2,
             class_weight=cw_dict,

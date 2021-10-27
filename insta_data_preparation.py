@@ -8,7 +8,7 @@ Created on Fri Oct 22 15:20:40 2021
 import numpy as np
 import pandas as pd
 import preprocessing
-from features_extraction import extract_all_features
+from features_extraction import extract_all_features, extract_time_features
 from sklearn.model_selection import train_test_split
 import os 
 import pickle
@@ -45,6 +45,7 @@ if __name__ == '__main__':
     
     ### Making one row per session
     relabeled_dataset = preprocessing.relabeling_dataset(relabeled_dataset)
+    relabeled_dataset_copy = relabeled_dataset.copy()
     
     ### Preprocessing text comments
     preprocessing.preprocess_data(relabeled_dataset)
@@ -67,7 +68,8 @@ if __name__ == '__main__':
       
     ### Extract features
     print("Extracting features ... \n")
-    dataset_embeddings, cmnt_owner_embeddings, time_features, like_features, sentiment_features = extract_all_features(relabeled_dataset)
+    dataset_embeddings, cmnt_owner_embeddings, like_features, sentiment_features = extract_all_features(relabeled_dataset)
+    time_features = extract_time_features(relabeled_dataset_copy)
     print("Extraction Done. \n")
     
     ### Train test split

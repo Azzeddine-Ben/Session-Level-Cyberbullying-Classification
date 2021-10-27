@@ -91,9 +91,9 @@ def extract_time_features(dataframe):
       subtract_time_list.append([(datetime_elem - y).total_seconds() if datetime_elem !=0 else 0 for datetime_elem in x])
 
     time_features = np.array(subtract_time_list)
-
-    scaler = MinMaxScaler()
     
+    ### Scaling features
+    scaler = MinMaxScaler()
     scaler.fit(time_features)
     scaled_time_features = scaler.transform(time_features)
     
@@ -107,8 +107,14 @@ def extract_likes(dataframe):
         likes_features.append(txt[0])
       except IndexError:
         likes_features.append(0)   
-    likes_features = np.asarray(likes_features)
-    return likes_features
+    likes_features = np.asarray(likes_features).reshape(-1,1)
+    
+    ### Scaling features
+    scaler = MinMaxScaler()
+    scaler.fit(likes_features)
+    scaled_likes_features = scaler.transform(likes_features)
+    
+    return scaled_likes_features
 
 def extract_sentiment_features(dataframe):
     def strip_creation_time(text):
@@ -130,7 +136,7 @@ def extract_sentiment_features(dataframe):
     sentiment_features = []
     analyzer = SentimentIntensityAnalyzer()
     
-    df_stripped_time = dataframe[dataframe.columns[:-5]].applymap(strip_creation_time)
+    df_stripped_time = dataframe[dataframe.columns[:-6]].applymap(strip_creation_time)
     for index, row in df_stripped_time.iterrows():
       all_sentiments_list = []
       for cmnt in row:
@@ -168,7 +174,7 @@ def extract_owner_cmnt_embedding(dataframe):
     return np.asarray(owner_cmnt_embeddings)
 
 def extract_all_features(dataframe):
-    return generate_embeddings(dataframe), extract_owner_cmnt_embedding(dataframe), extract_time_features(dataframe), extract_likes(dataframe), extract_sentiment_features(dataframe)    
+    return generate_embeddings(dataframe), extract_owner_cmnt_embedding(dataframe), extract_likes(dataframe), extract_sentiment_features(dataframe)    
 
     
     

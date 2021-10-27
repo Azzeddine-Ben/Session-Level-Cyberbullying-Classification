@@ -7,7 +7,7 @@ Created on Sat Oct 23 10:44:44 2021
 import keras
 # import keras.backend as K
 from keras.models import Model
-from keras.layers import Input, Dense, Embedding, Concatenate, GRU, Dropout, Flatten, GlobalMaxPooling1D, GlobalAveragePooling1D, Attention, MultiHeadAttention, BatchNormalization
+from keras.layers import Input, Dense, Embedding, Concatenate, GRU, Dropout, Bidirectional, Flatten, GlobalMaxPooling1D, GlobalAveragePooling1D, Attention, MultiHeadAttention, BatchNormalization
 # from keras.utils import plot_model
 import tensorflow as tf
 import random as python_random
@@ -92,7 +92,7 @@ def slcbc_framework(maxlen):
     query_seq_encoding = gru_layer(embeddings_input_layer)
     # query_value_attention_seq = mha(embeddings_input_layer, embeddings_input_layer)
     query_value_attention_seq = mha(embeddings_input_layer)
-    sentence_postion_encoding = pos_embed_layer(embeddings_input_layer)
+    sentence_postion_encoding = pos_embed_layer(embeddings_input_layer, maxlen)
     
     concatLayer = Concatenate()(
         [sentence_postion_encoding, query_value_attention_seq, query_seq_encoding])
