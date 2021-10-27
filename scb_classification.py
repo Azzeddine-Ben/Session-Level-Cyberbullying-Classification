@@ -71,15 +71,17 @@ if __name__ == '__main__':
     for train_elem, test_elem in zip(train_features[:2], test_features[:2]):
         truncated_train_features.append(train_elem[:,maxlen+1,:])
         truncated_test_features.append(test_elem[:,maxlen+1,:])
-    ### Truncate -dimensional data
-    for train_elem, test_elem in zip(train_features[2:], test_features[2:]):
+    ### Truncate 2-dimensional data
+    for train_elem, test_elem in zip(train_features[2], test_features[2]):
         truncated_train_features.append(train_elem[:,maxlen+1])
-        truncated_test_features.append(test_elem[:,maxlen+1])    
-    
+        truncated_test_features.append(test_elem[:,maxlen+1])   
+        
+    truncated_train_features.append(train_features[3], train_features[4])
+    truncated_test_features.append(test_features[3], test_features[4])
     
     #### Prepare train, test and label data
-    X_train, X_train_cmnt_emb, X_train_time, X_train_likes, X_train_sntms = truncated_train_features
-    X_test, X_test_cmnt_emb, X_test_time, X_test_likes, X_test_sntms      = truncated_test_features
+    X_train, X_train_sntms, X_train_time, X_train_cmnt_emb, X_train_likes  = truncated_train_features
+    X_test, X_test_sntms, X_test_time, X_test_cmnt_emb, X_test_likes       = truncated_test_features
     y_train, y_test = load_labels(dataset_name)
     
     #### Classification
