@@ -66,9 +66,16 @@ if __name__ == '__main__':
     
     #### Truncate sessions to the maxlen comments
     truncated_train_features, truncated_test_features = [], []
-    for train_elem, test_elem in zip(train_features, test_features):
+    
+    ### Truncate 3-dimensional data
+    for train_elem, test_elem in zip(train_features[:2], test_features[:2]):
         truncated_train_features.append(train_elem[:,maxlen+1,:])
         truncated_test_features.append(test_elem[:,maxlen+1,:])
+    ### Truncate -dimensional data
+    for train_elem, test_elem in zip(train_features[2:], test_features[2:]):
+        truncated_train_features.append(train_elem[:,maxlen+1])
+        truncated_test_features.append(test_elem[:,maxlen+1])    
+    
     
     #### Prepare train, test and label data
     X_train, X_train_cmnt_emb, X_train_time, X_train_likes, X_train_sntms = truncated_train_features
