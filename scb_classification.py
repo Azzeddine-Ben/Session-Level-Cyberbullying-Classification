@@ -107,7 +107,7 @@ if __name__ == '__main__':
     
     if cs_method == 'cw':
         history = model.fit(
-            [X_train, X_train_time, X_train_likes, X_train_cmnt_emb],# X_train_sntms],, 
+            [X_train, X_train_time, X_train_likes, X_train_cmnt_emb, X_train_sntms],# X_train_sntms],, 
             y_train, 
             epochs=5, 
             batch_size=32, 
@@ -121,7 +121,7 @@ if __name__ == '__main__':
     os.mkdir(results_dir)
     print_learning_curves(history, results_dir)
     # model.load_weights(chkp_path)
-    clf_report, confusion_matrix_fig = predict_and_visualize(model, [X_test, X_test_time, X_test_likes, X_test_cmnt_emb], y_test)# X_test_sntms], y_test)
+    clf_report, confusion_matrix_fig = predict_and_visualize(model, [X_test, X_test_time, X_test_likes, X_test_cmnt_emb, X_test_sntms], y_test)# X_test_sntms], y_test)
     
     ### Saving the classification report as a CSV file
     clf_report_df = pd.DataFrame(clf_report).transpose()

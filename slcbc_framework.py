@@ -84,6 +84,9 @@ def slcbc_framework(maxlen):
     
     embeddings_input_layer = Input(shape=(maxlen, embed_dim), dtype='float32')
     
+    #### Sentiment features
+    sentiments_input_layer = Input(shape=(maxlen, 6), dtype='float32')
+
     gru_layer = GRU(5, activation='relu', return_sequences=True)
     # mha = MultiHeadAttention(num_heads=2, key_dim=2)
     mha = MultiHeadAttention_(maxlen, 8, 512)
@@ -95,7 +98,7 @@ def slcbc_framework(maxlen):
     sentence_postion_encoding = pos_embed_layer(embeddings_input_layer, maxlen)
     
     concatLayer = Concatenate()(
-        [sentence_postion_encoding, query_value_attention_seq, query_seq_encoding])
+        [sentence_postion_encoding, query_value_attention_seq, query_seq_encoding, sentiments_input_layer])
     # pooling = GlobalAveragePooling1D()(concatLayer)
     ####################################
     
@@ -128,12 +131,13 @@ def slcbc_framework(maxlen):
         [query_value_attention, norm_likes, cmnt_post]
     )
     
-    dropout = keras.layers.GaussianNoise(stddev=0.2)(concat_likes)
+    dropout = keras.layers.GaussianNoise(stddev=0.4)(concat_likes)
     # dropout = keras.layers.Dropout(0.2)(concat_likes)
-    dense = Dense(10, activation='relu')(dropout)
+    dense = Dense(32, activation='relu')(dropout)
+    # dense = Dense(16, activation='relu')(dense)
     dense = Dense(1, activation='sigmoid')(dense)
     
-    model = Model(inputs = [embeddings_input_layer, time_input_layer, likes_input_layer, cmnt_input_layer], outputs = dense)
+    model = Model(inputs = [embeddings_input_layer, time_input_layer, likes_input_layer, cmnt_input_layer, sentiments_input_layer], outputs = dense)
     return model
 
 # =============================================================================
