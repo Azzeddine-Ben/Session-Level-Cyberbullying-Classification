@@ -362,3 +362,21 @@ def relabeling_dataset(df):
 def preprocess_data(dataframe):
   for column in dataframe.columns[:-6]:
     dataframe[column] = dataframe[column].apply(preprocessing_session)
+    
+### Preprocessing Vine dataset
+def initial_vine_preprocessing(text):
+  text = re.sub(r"(?:\@|https?\://)\S+", "", text)
+  if text != "empety" or text.startswith('Media') == False:
+    text = re.sub(r'\(created.+\)', '', re.sub(r'<.+::', '', text))
+  return text
+
+def preprocessing_vine_session(text):
+  b = '_ÙÕª_ÙÓÔ'
+  if type(text) == float:
+    text = ''
+  for char in b: text=text.replace(char, '')
+  text = ''.join(remove_punctuation(''.join(remove_non_ascii(''.join(to_lowercase(denoise_text(initial_vine_preprocessing(text))))))))
+  if text == '  ' or text == ' ' or text == '' or text.startswith('Media'):
+    text = 'empety'
+  return text
+
