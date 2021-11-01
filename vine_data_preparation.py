@@ -48,9 +48,11 @@ if __name__ == '__main__':
       
     print('Preprocessing done. \n')
     
+    vine_dataframe_org = vine_dataframe_org.fillna('empty')
+    
     print("Extracting Features ... \n")
     
-    dataset_embeddings, media_cap_embeddings, time_features, likes_features = extract_vine_features(vine_dataframe_org)
+    dataset_embeddings, media_cap_embeddings, time_features, likes_features, sentiment_features = extract_vine_features(vine_dataframe_org)
     
     print("Features extraction done. \n")
     
@@ -62,6 +64,7 @@ if __name__ == '__main__':
     X_train_time, X_test_time         = train_test_split(time_features, test_size = 0.2, random_state = 42)
     X_train_likes, X_test_likes       = train_test_split(likes_features, test_size = 0.2, random_state = 42)
     X_train_media_cpt, X_test_media_cpt = train_test_split(media_cap_embeddings, test_size = 0.2, random_state = 42)
+    X_train_sntms, X_test_sntms = train_test_split(sentiment_features, test_size = 0.2, random_state = 42)
     
     X_train, X_test, y_train, y_test = np.asarray(X_train), np.asarray(X_test), np.asarray(y_train), np.asarray(y_test)
     print("Splitting done.")  
@@ -81,18 +84,14 @@ if __name__ == '__main__':
         pickle.dump( X_train_media_cpt, open( train_dir + "/X_train_mediacap_emb", "wb" ) )        
         pickle.dump( X_train_time, open( train_dir + "/X_train_time", "wb" ) )       
         pickle.dump( X_train_likes, open( train_dir + "/X_train_likes", "wb" ) )         
-# =============================================================================
-#         pickle.dump( X_train_sntms, open( train_dir + "/X_train_sntms", "wb" ) )      
-# =============================================================================
+        pickle.dump( X_train_sntms, open( train_dir + "/X_train_sntms", "wb" ) )      
     
         pickle.dump( X_test, open( test_dir + "/X_test", "wb"))
         pickle.dump( y_test, open( test_dir + "/y_test", "wb" ) )
         pickle.dump( X_test_media_cpt, open( test_dir + "/X_test_mediacap_emb", "wb" ))
         pickle.dump( X_test_time, open( test_dir + "/X_test_time", "wb" ) )
         pickle.dump( X_test_likes, open( test_dir + "/X_test_likes", "wb" ))
-# =============================================================================
-#         pickle.dump( X_test_sntms, open( test_dir + "/X_test_sntms", "wb" ) )     
-# =============================================================================
+        pickle.dump( X_test_sntms, open( test_dir + "/X_test_sntms", "wb" ) )     
         
     
     # =============================================================================

@@ -68,6 +68,16 @@ def convert_string_to_datetime(string_list):
       date_time_obj = datetime.strptime(string_datetime, '%y-%m-%d %H:%M:%S')
       datetime_list.append(date_time_obj)
   return datetime_list
+
+def convert_vine_string_to_datetime(string_list):
+  datetime_list = []
+  for string_datetime in string_list:
+    if string_datetime == 0:
+      datetime_list.append(0)
+    else:
+      date_time_obj = datetime.strptime(string_datetime, '%Y-%m-%d %H:%M:%S')
+      datetime_list.append(date_time_obj)
+  return datetime_list
   
 def convert_publication_time_to_datetime(publication_time_list):
   converted_list = []
@@ -165,7 +175,7 @@ def extract_vine_time_features(dataframe):
         # print(publication_time_list[index][list_index][-8:], date_time_obj)
         cptn_time_list[index] =  publication_time_list[index][list_index][:-8] + date_time_obj  
         
-    cptn_datetime_list = convert_string_to_datetime(cptn_time_list)
+    cptn_datetime_list = convert_vine_string_to_datetime(cptn_time_list)
     
     publication_datetime_list = convert_vine_publication_time_to_datetime(publication_time_list)
     
@@ -202,7 +212,7 @@ def extract_likes(dataframe):
     return scaled_likes_features
 
 def extract_vine_likes(dataframe):
-    likes_features = np.asarray(dataframe['likes'])
+    likes_features = np.asarray(dataframe['likes']).reshape(-1, 1)
     scaler = MinMaxScaler()
     scaler.fit(likes_features)
     scaled_likes_features = scaler.transform(likes_features)
@@ -231,6 +241,29 @@ def extract_sentiment_features(dataframe):
     
     df_stripped_time = dataframe[dataframe.columns[:-6]].applymap(strip_creation_time)
     for index, row in df_stripped_time.iterrows():
+      all_sentiments_list = []
+      for cmnt in row:
+        sentiment_list = []
+        blob_cmnt = TextBlob(cmnt)
+        sentiment_list.append(blob_cmnt.sentiment.polarity)
+        sentiment_list.append(blob_cmnt.sentiment.subjectivity)
+    
+        vader_sentiments = analyzer.polarity_scores(cmnt)
+        sentiment_list.append(vader_sentiments['compound'])
+        sentiment_list.append(vader_sentiments['pos'])
+        sentiment_list.append(vader_sentiments['neu'])
+        sentiment_list.append(vader_sentiments['neg'])
+    
+        all_sentiments_list.append(sentiment_list)
+      sentiment_features.append(all_sentiments_list)
+      
+    sentiment_features = np.asarray(sentiment_features)
+    return sentiment_features
+
+def extract_vine_sentiment_features(dataframe):
+    sentiment_features = []
+    analyzer = SentimentIntensityAnalyzer()
+    for index, row in dataframe[dataframe.columns[:-5]].iterrows():
       all_sentiments_list = []
       for cmnt in row:
         sentiment_list = []
@@ -287,7 +320,7 @@ def extract_all_features(dataframe):
     return generate_embeddings(dataframe), extract_owner_cmnt_embedding(dataframe), extract_likes(dataframe), extract_sentiment_features(dataframe)    
 
 def extract_vine_features(dataframe):
-    return generate_vine_embeddings(dataframe), extract_media_cap_embeddings(dataframe), extract_vine_time_features(dataframe), extract_vine_likes(dataframe)
+    return generate_vine_embeddings(dataframe), extract_media_cap_embeddings(dataframe), extract_vine_time_features(dataframe), extract_vine_likes(dataframe), extract_vine_sentiment_features(dataframe)
     
     
     
