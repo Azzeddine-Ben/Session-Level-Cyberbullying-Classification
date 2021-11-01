@@ -35,7 +35,7 @@ def generate_vine_embeddings(dataframe):
     embed_type = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
     
     dataset_embeddings = []
-    for index, row in dataframe[dataframe.columns[:-4]].iterrows():
+    for index, row in dataframe[dataframe.columns[:-5]].iterrows():
         session_embed = []
         for text in row.to_list():
           if (text is not None) and (text != "empety"):
@@ -84,11 +84,26 @@ def convert_publication_time_to_datetime(publication_time_list):
     converted_list.append(datetime_per_list)
   return converted_list
 
+def convert_vine_publication_time_to_datetime(publication_time_list):
+  converted_list = []
+  cpt = 0
+  for list_elem in publication_time_list:
+    datetime_per_list = []
+    for elem in list_elem:
+      try:
+        date_time_obj = datetime.strptime(elem, '%Y-%m-%d %H:%M:%S')
+        datetime_per_list.append(date_time_obj)
+        cpt += 1 
+      except (TypeError, ValueError):
+        datetime_per_list.append(0)
+    converted_list.append(datetime_per_list)
+  return converted_list
+
 def get_vine_publication_time_list(df):
   publication_time_list = []
   for index, row in df.iterrows():
     time_list_per_session = []
-    for r in row[:-4]:
+    for r in row[:-5]:
       try:
         if r == "empety" or r =='empty':
           time_list_per_session.append(0)
@@ -152,7 +167,7 @@ def extract_vine_time_features(dataframe):
         
     cptn_datetime_list = convert_string_to_datetime(cptn_time_list)
     
-    publication_datetime_list = convert_publication_time_to_datetime(publication_time_list)
+    publication_datetime_list = convert_vine_publication_time_to_datetime(publication_time_list)
     
     subtract_time_list = []
     for x, y in zip(publication_datetime_list, cptn_datetime_list):
@@ -272,7 +287,7 @@ def extract_all_features(dataframe):
     return generate_embeddings(dataframe), extract_owner_cmnt_embedding(dataframe), extract_likes(dataframe), extract_sentiment_features(dataframe)    
 
 def extract_vine_features(dataframe):
-    return generate_vine_embeddings(dataframe), extract_media_cap_embeddings(dataframe), extract_vine_time_features, extract_vine_likes(dataframe)
+    return generate_vine_embeddings(dataframe), extract_media_cap_embeddings(dataframe), extract_vine_time_features(dataframe), extract_vine_likes(dataframe)
     
     
     
