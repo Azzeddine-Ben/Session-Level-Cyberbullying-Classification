@@ -29,6 +29,7 @@ if __name__ == '__main__':
     vine_dataframe_org['label']     = vine_dataset['question2']
     vine_dataframe_org['cptn_time'] = vine_dataset['creationtime']
     vine_dataframe_org['likes']     = vine_dataset['likecount']
+    vine_dataframe_org['mediacaption'] = vine_dataset['mediacaption']
     
     #### Preprocessing 
     print('Preprocessing data ... \n')
@@ -36,10 +37,10 @@ if __name__ == '__main__':
     vine_dataframe_org['label'].replace('bullying', 1, inplace = True)
     
     vine_dataframe_pr = pd.DataFrame()
-    for column in vine_dataframe_org.columns[:-4]:
+    for column in vine_dataframe_org.columns[:-5]:
       vine_dataframe_pr[column] = vine_dataframe_org[column].apply(preprocessing.preprocessing_vine_session)
     
-    for column in vine_dataframe_org.columns[-4:]:
+    for column in vine_dataframe_org.columns[-5:]:
       vine_dataframe_pr[column] = vine_dataframe_org[column]
       
     for num in range(101,661):

@@ -38,7 +38,7 @@ def generate_vine_embeddings(dataframe):
     for index, row in dataframe[dataframe.columns[:-5]].iterrows():
         session_embed = []
         for text in row.to_list():
-          if (text is not None) and (text != "empety"):
+          if (text is not None) and (text != "empty"):
             emb = embed_type(tf.constant([text], dtype=tf.string)).numpy()[0]
             session_embed.append(emb)
           else:
