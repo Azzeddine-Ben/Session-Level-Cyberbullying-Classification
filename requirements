@@ -1,3 +1,4 @@
 tensorflow-hub==0.5.0
 textblob 
 vaderSentiment
+keras-tcn 

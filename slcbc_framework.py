@@ -12,6 +12,7 @@ from keras.layers import Input, Dense, Embedding, Concatenate, GRU, Dropout, Bid
 import tensorflow as tf
 import random as python_random
 import numpy as np 
+from tcn import TCN
 
 class MultiHeadAttention_(keras.layers.Layer):
   def __init__(self, maxlen, num_heads, embed_dim):
@@ -88,6 +89,7 @@ def slcbc_framework(maxlen):
     sentiments_input_layer = Input(shape=(maxlen, 6), dtype='float32')
 
     gru_layer = tf.keras.layers.Bidirectional(GRU(5, activation='relu', return_sequences=True))
+    # gru_layer = TCN(kernel_size=6, dilations=[1, 2, 4, 8, 16], return_sequences=True)
     # mha = MultiHeadAttention(num_heads=2, key_dim=2)
     mha = MultiHeadAttention_(maxlen, 2, 512)
     pos_embed_layer = PositionEmbedding(maxlen, embed_dim)
