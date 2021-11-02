@@ -46,7 +46,7 @@ def print_confusion_matrix(confusion_matrix, class_names, figsize = (5,3), fonts
     return fig
 
 def make_predictions(classifier, X_test_):
-    test_predictions = classifier.predict(X_test_)
+    test_predictions = classifier.predict(X_test_, batch_size=32)
     return test_predictions
 
 def visualize_predictions(y_test, predictions, nn = False):

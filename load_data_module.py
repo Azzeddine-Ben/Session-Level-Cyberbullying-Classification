@@ -24,10 +24,6 @@ def load_train_features(dataset_name):
     X_train = pickle.load(pickle_in)
     pickle_in.close()
 
-    pickle_in = open(path + '/' + dataset_name + '_data/train/X_train_cmnt_emb', 'rb')
-    X_train_cmnt_emb = pickle.load(pickle_in)
-    pickle_in.close()
-
     pickle_in = open(path + '/' + dataset_name + '_data/train/X_train_time', 'rb')
     X_train_time = pickle.load(pickle_in)
     pickle_in.close()
@@ -39,6 +35,14 @@ def load_train_features(dataset_name):
     pickle_in = open(path + '/' + dataset_name + '_data/train/X_train_sntms', 'rb')
     X_train_sntms = pickle.load(pickle_in)
     pickle_in.close()    
+
+    if dataset_name == 'instagram':
+      pickle_in = open(path + '/' + dataset_name + '_data/train/X_train_cmnt_emb', 'rb')
+    elif dataset_name == 'vine':
+      pickle_in = open(path + '/' + dataset_name + '_data/train/X_train_mediacap_emb', 'rb')
+
+    X_train_cmnt_emb = pickle.load(pickle_in)
+    pickle_in.close()
   
     return [X_train, X_train_sntms, X_train_time, X_train_cmnt_emb, X_train_likes]
 
@@ -47,10 +51,6 @@ def load_test_features(dataset_name):
     
     pickle_in = open(path + '/' + dataset_name + '_data/test/X_test', 'rb')
     X_test = pickle.load(pickle_in)
-    pickle_in.close()
-
-    pickle_in = open(path + '/' + dataset_name + '_data/test/X_test_cmnt_emb', 'rb')
-    X_test_cmnt_emb = pickle.load(pickle_in)
     pickle_in.close()
 
     pickle_in = open(path + '/' + dataset_name + '_data/test/X_test_time', 'rb')
@@ -64,5 +64,13 @@ def load_test_features(dataset_name):
     pickle_in = open(path + '/' + dataset_name + '_data/test/X_test_sntms', 'rb')
     X_test_sntms = pickle.load(pickle_in)
     pickle_in.close()    
+
+    if dataset_name == 'instagram':
+      pickle_in = open(path + '/' + dataset_name + '_data/test/X_test_cmnt_emb', 'rb')
+    elif dataset_name == 'vine':
+      pickle_in = open(path + '/' + dataset_name + '_data/test/X_test_mediacap_emb', 'rb')
+      
+    X_test_cmnt_emb = pickle.load(pickle_in)
+    pickle_in.close()
   
     return [X_test, X_test_sntms, X_test_time, X_test_cmnt_emb, X_test_likes]

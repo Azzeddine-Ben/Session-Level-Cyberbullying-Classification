@@ -87,9 +87,9 @@ def slcbc_framework(maxlen):
     #### Sentiment features
     sentiments_input_layer = Input(shape=(maxlen, 6), dtype='float32')
 
-    gru_layer = GRU(5, activation='relu', return_sequences=True)
+    gru_layer = tf.keras.layers.Bidirectional(GRU(5, activation='relu', return_sequences=True))
     # mha = MultiHeadAttention(num_heads=2, key_dim=2)
-    mha = MultiHeadAttention_(maxlen, 8, 512)
+    mha = MultiHeadAttention_(maxlen, 2, 512)
     pos_embed_layer = PositionEmbedding(maxlen, embed_dim)
     
     query_seq_encoding = gru_layer(embeddings_input_layer)
@@ -109,9 +109,9 @@ def slcbc_framework(maxlen):
     norm_time = BatchNormalization()(time_embed)
     
     ###### Likes features inputs
-    likes_input_layer = Input(shape=())
-    likes_input_reshape = keras.layers.Reshape((1,))(likes_input_layer)
-    likes_post = Dense(20, use_bias=False)(likes_input_reshape)
+    likes_input_layer = Input(shape=(1,))
+    # likes_input_reshape = keras.layers.Reshape((1,))(likes_input_layer)
+    likes_post = Dense(20, use_bias=False)(likes_input_layer)
     norm_likes = BatchNormalization()(likes_post)
     
     ###### Owner comment embeddings
@@ -133,7 +133,7 @@ def slcbc_framework(maxlen):
     
     dropout = keras.layers.GaussianNoise(stddev=0.4)(concat_likes)
     # dropout = keras.layers.Dropout(0.2)(concat_likes)
-    dense = Dense(32, activation='relu')(dropout)
+    dense = Dense(10, activation='relu')(dropout)
     # dense = Dense(16, activation='relu')(dense)
     dense = Dense(1, activation='sigmoid')(dense)
     
