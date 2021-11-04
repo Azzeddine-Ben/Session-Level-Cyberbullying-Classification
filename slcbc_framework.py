@@ -77,7 +77,7 @@ ff_dim = 32  # Hidden layer size in feed forward network inside transformer
 # maxlen = 100
 # =============================================================================
 
-def slcbc_framework(maxlen):
+def slcbc_framework(maxlen, model_type):
     ##### Embeddings inputs
     np.random.seed(123)
     python_random.seed(123)
@@ -87,14 +87,16 @@ def slcbc_framework(maxlen):
     
     #### Sentiment features
     sentiments_input_layer = Input(shape=(maxlen, 6), dtype='float32')
-
-    gru_layer = tf.keras.layers.Bidirectional(GRU(5, activation='relu', return_sequences=True))
-    # gru_layer = TCN(kernel_size=6, dilations=[1, 2, 4, 8, 16], return_sequences=True)
+    
+    if model_type == 'gru':
+        itrm_layer = tf.keras.layers.Bidirectional(GRU(5, activation='relu', return_sequences=True))
+    elif model_type == 'tcn':
+        itrm_layer = TCN(kernel_size=6, dilations=[1, 2, 4, 8, 16], return_sequences=True)
     # mha = MultiHeadAttention(num_heads=2, key_dim=2)
     mha = MultiHeadAttention_(maxlen, 2, 512)
     pos_embed_layer = PositionEmbedding(maxlen, embed_dim)
     
-    query_seq_encoding = gru_layer(embeddings_input_layer)
+    query_seq_encoding = itrm_layer(embeddings_input_layer)
     # query_value_attention_seq = mha(embeddings_input_layer, embeddings_input_layer)
     query_value_attention_seq = mha(embeddings_input_layer)
     sentence_postion_encoding = pos_embed_layer(embeddings_input_layer, maxlen)
