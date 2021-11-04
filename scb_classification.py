@@ -44,6 +44,11 @@ if __name__ == '__main__':
                            type=str,
                            help='Name of the dataset to extract features')
     
+    my_parser.add_argument('model_type',
+                           metavar='model_type',
+                           type=str,
+                           help='Choice of model type GRU/TCN')
+    
     my_parser.add_argument('maxlen_cmnts',
                            metavar='maxlen_cmnts',
                            type=int,
@@ -57,8 +62,9 @@ if __name__ == '__main__':
                            )
     args = my_parser.parse_args()
     dataset_name = args.dataset_name
-    maxlen = args.maxlen_cmnts
-    cs_method = args.cost_sensitive
+    model_type   = args.model_type
+    maxlen       = args.maxlen_cmnts
+    cs_method    = args.cost_sensitive
     
     #### Load data 
     train_features = load_train_features(dataset_name)
@@ -87,7 +93,10 @@ if __name__ == '__main__':
     y_train, y_test = load_labels(dataset_name)
     
     #### Classification
-    model = slcbc_framework(maxlen)
+    if model_type == 'gru':
+        model = slcbc_framework(maxlen, 'gru')
+    elif model_type == 'tcn':
+        model = slcbc_framework(maxlen, 'tcn')
     model.summary()
     chkp_path = dataset_name + '_model_classification.h5'
     mchkp = tf.keras.callbacks.ModelCheckpoint(chkp_path, monitor='val_loss', verbose=1, save_best_only=True, save_weights_only = True)
