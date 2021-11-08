@@ -99,7 +99,7 @@ if __name__ == '__main__':
     elif model_type == 'tcn':
         model = slcbc_framework(maxlen, 'tcn')
     model.summary()
-    chkp_path = dataset_name + '_' + model_type + '_' + maxlen +'cmnts_.h5'
+    chkp_path = dataset_name + '_' + model_type + '_' + str(maxlen) + 'cmnts.h5'
     mchkp = tf.keras.callbacks.ModelCheckpoint(chkp_path, monitor='val_loss', verbose=1, save_best_only=True, save_weights_only = True)
     model.compile('adam', 'binary_crossentropy', metrics=['accuracy'])     
     keras.utils.plot_model(model)
