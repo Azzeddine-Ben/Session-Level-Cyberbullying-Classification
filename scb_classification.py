@@ -60,6 +60,7 @@ if __name__ == '__main__':
                            type=str,
                            help='Cost sensitive method (cw: class weights / focal: focal loss)',
                            )
+    
     args = my_parser.parse_args()
     dataset_name = args.dataset_name
     model_type   = args.model_type
@@ -98,7 +99,7 @@ if __name__ == '__main__':
     elif model_type == 'tcn':
         model = slcbc_framework(maxlen, 'tcn')
     model.summary()
-    chkp_path = dataset_name + '_model_classification.h5'
+    chkp_path = dataset_name + '_' + model_type + '_' + maxlen +'cmnts_.h5'
     mchkp = tf.keras.callbacks.ModelCheckpoint(chkp_path, monitor='val_loss', verbose=1, save_best_only=True, save_weights_only = True)
     model.compile('adam', 'binary_crossentropy', metrics=['accuracy'])     
     keras.utils.plot_model(model)
@@ -124,7 +125,7 @@ if __name__ == '__main__':
             class_weight=cw_dict,
             callbacks=callbacks
             )        
-        results_dir = dataset_name + '_classification_results_cw_' + str(maxlen)
+        results_dir = dataset_name + '_classification_results_cw_' + model_type + '_' + str(maxlen) + 'cmnts'
     
     ### Saving results
     os.mkdir(results_dir)
