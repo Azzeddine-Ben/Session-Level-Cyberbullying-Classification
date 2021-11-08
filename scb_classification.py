@@ -119,7 +119,7 @@ if __name__ == '__main__':
         history = model.fit(
             [X_train, X_train_time, X_train_likes, X_train_cmnt_emb, X_train_sntms],# X_train_sntms],, 
             y_train, 
-            epochs=5, 
+            epochs=10, 
             batch_size=32, 
             validation_split=0.2,
             class_weight=cw_dict,
